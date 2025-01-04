@@ -1,32 +1,34 @@
-import React, { useState } from 'react';
-import emailjs from 'emailjs-com';
+import React, { useRef } from 'react';
+import emailjs from '@emailjs/browser';
 
 const Contact = () => {
-    const [formData, setFormData] = useState({
-        name: '',
-        email: '',
-        message: '',
-    });
+    const form = useRef();
 
-    const handleSubmit = (e) => {
+    const sendEmail = (e) => {
         e.preventDefault();
 
         emailjs
             .sendForm(
                 'service_c7092ls', // Replace with your EmailJS Service ID
                 'template_g1wgjqe', // Replace with your EmailJS Template ID
-                e.target, // The form element
-                // 'YOUR_USER_' // Replace with your EmailJS User ID
-                { publicKey: 'BCIUqiQ1Oe53bPa9a' }
+                form.current,
+                'BCIUqiQ1Oe53bPa9a' // Replace with your EmailJS Public Key
             )
-            .then((result) => {
-                alert('Message sent successfully!');
-                setFormData({ name: '', email: '', message: '' }); // Reset form
-            })
-            .catch((error) => {
-                alert('Failed to send message. Please try again later.');
-                console.error(error);
-            });
+            .then(
+                (result) => {
+                    console.log('SUCCESS!', result.text);
+                    alert('Your message has been sent successfully!');
+                },
+                (error) => {
+                    console.log('FAILED...', error.text);
+                    alert(
+                        'Failed to send your message. Please try again later.'
+                    );
+                }
+            );
+
+        // Clear the form after submission
+        e.target.reset();
     };
 
     return (
@@ -36,53 +38,42 @@ const Contact = () => {
                     Contact Me
                 </h2>
                 <p className="text-center mb-12">
-                    Feel free to get in touch using the form below!
+                    Feel free to reach out using the form below!
                 </p>
                 <form
-                    onSubmit={handleSubmit}
+                    ref={form}
+                    onSubmit={sendEmail}
                     className="max-w-lg mx-auto bg-white p-8 shadow rounded"
                 >
                     <div className="mb-4">
                         <label
-                            htmlFor="name"
+                            htmlFor="user_name"
                             className="block text-gray-700 font-medium mb-2"
                         >
                             Name
                         </label>
                         <input
                             type="text"
-                            id="name"
-                            name="name"
-                            value={formData.name}
-                            onChange={(e) =>
-                                setFormData({
-                                    ...formData,
-                                    name: e.target.value,
-                                })
-                            }
+                            name="user_name"
+                            id="user_name"
                             className="w-full border border-gray-300 rounded p-2"
+                            placeholder="Your Name"
                             required
                         />
                     </div>
                     <div className="mb-4">
                         <label
-                            htmlFor="email"
+                            htmlFor="user_email"
                             className="block text-gray-700 font-medium mb-2"
                         >
                             Email
                         </label>
                         <input
                             type="email"
-                            id="email"
-                            name="email"
-                            value={formData.email}
-                            onChange={(e) =>
-                                setFormData({
-                                    ...formData,
-                                    email: e.target.value,
-                                })
-                            }
+                            name="user_email"
+                            id="user_email"
                             className="w-full border border-gray-300 rounded p-2"
+                            placeholder="Your Email"
                             required
                         />
                     </div>
@@ -94,16 +85,10 @@ const Contact = () => {
                             Message
                         </label>
                         <textarea
-                            id="message"
                             name="message"
-                            value={formData.message}
-                            onChange={(e) =>
-                                setFormData({
-                                    ...formData,
-                                    message: e.target.value,
-                                })
-                            }
+                            id="message"
                             className="w-full border border-gray-300 rounded p-2"
+                            placeholder="Your Message"
                             rows="5"
                             required
                         ></textarea>
