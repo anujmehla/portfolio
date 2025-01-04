@@ -5,14 +5,16 @@ const Projects = () => {
         {
             id: 1,
             title: 'Spoorthi',
-            description: 'This is an amazing project.',
-            link: '#',
+            description:
+                'This is a ngo website backend built using Spring Boot.',
+            link: 'https://github.com/anujmehla/Spoorthi',
         },
         {
             id: 2,
             title: 'Local Bank',
-            description: 'This is another cool project.',
-            link: '#',
+            description:
+                'This is replica of a bank website built using Spring Boot.',
+            link: 'https://github.com/anujmehla/LocalBank',
         },
     ];
 
